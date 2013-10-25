@@ -6,11 +6,6 @@ General Information
 
 This package contains the communications request system used at Brentwood Baptist Church as of October 2013. It was custom built using PHP, MySQL, and the LiquidPlanner API. It uses the open-source projects [JQuery](http://jquery.com/), [Uploadify](http://www.uploadify.com/), [TinyMCE](http://www.tinymce.com/), [php-liquidplanner](https://github.com/jonoxer/php-liquidplanner), and [Tablesorter](http://tablesorter.com/). Read below for information on set-up.
 
-Licensing Information
---------------------
-
-License information to be added at a later date.
-
 Database Set-Up
 --------------------
 
@@ -38,3 +33,14 @@ Contact Info
 --------------------
 
 While we at Brentwood Baptist do not provide technical support for this project, we would love to know if you're using it and if you have any questions. We may not be able to answer them, but if we can we will. If you decide to add any cool features yourself, please let us know because we may want to copy you. Email us at web@brentwoodbaptist.com.
+
+License Information
+--------------------
+
+Copyright (C) 2013 Brentwood Baptist Church
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see [http://www.gnu.org/licenses/].
