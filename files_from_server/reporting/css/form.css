@@ -1,0 +1,27 @@
+#logo { display:none; }
+.wufoo .info h2{ display:none; }
+.wufoo .section h3{ font-size:24px; font-weight:300; }
+.wufoo label.desc, .wufoo legend.desc{ font-size:12px; font-weight:600; }
+.wufoo label.choice{ font-size:12px; }
+.wufoo input.text, .wufoo textarea.textarea, .wufoo input.file, .wufoo select.select { padding: 5px 5px;
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px; }
+.wufoo input.file {
+	margin: 5px 0px;
+	padding: 10px 20px;
+	width:750px;
+	background-color: #CCC !important;
+	border: #333 solid 1px;
+}
+.wufoo .section div { font-size:12px; font-style:italic; }
+.wufoo li {margin-top:10px; }
+.wufoo input.btTxt { background-color: #333;
+	border: 0px; 
+	padding: 8px 20px; 
+	color: #ECECEC; 
+	font-family: 'Open Sans', Arial, sans-serif; 
+	font-size: 16px; 
+	font-weight:500;
+	float:right;}

@@ -1,0 +1,96 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+ Title : 
+ Author : 
+ URL : http://
+
+ Last Updated : 
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+#logo {
+	display:none;
+}
+#header {
+	display: none;
+}
+#fo82li8 {
+	margin-bottom:10px !important;
+	display:block;
+	}
+#fo82li8.section {
+	padding-bottom:0px !important;
+	margin-bottom:0px !important;
+	padding-left:35px !important;
+	margin-top: 20px !important;
+	background-color:#000;
+}
+#fo82li8.section h3 {
+	padding-bottom:0px !important;
+	margin-bottom:0px !important;
+	color:#eae9e7;
+	font-size:30px !important;
+	font-weight:900 !important;
+	line-height: 70% !important;
+	text-transform:uppercase;
+}
+#fo82li798 {
+	margin-bottom:10px !important;
+	display:block;
+}
+#fo82li798.section {
+	padding-bottom:0px !important;
+	margin-bottom:0px !important;
+	padding-left:35px !important;
+	padding-top: 10px !important;
+	background-color:#000;
+}
+#fo82li798.section h3 {
+	padding-bottom:0px !important;
+	margin-bottom:0px !important;
+	color:#eae9e7;
+	font-size:30px !important;
+	font-weight:900 !important;
+	line-height: 70% !important;
+	text-transform:uppercase;
+}
+#saveForm {
+float: right;
+margin-right: 50px;
+width: 266px;
+height: 47px;
+border: 0px !important;
+font-size: 0px !important;
+background-image: url("../images/submittechoff.jpg");
+}
+
+#saveForm:hover {
+background-image: url("../images/submittechon.jpg");
+}
+#fo82li665, #fo82li3, #fo82li5 {
+	padding-left:45px;
+}
+.buttons {
+	padding-top:40px !important;
+}
+#fo82li37, #fo82li137, #fo82li250, #fo82li350, #fo82li462, #fo82li564 {
+	padding-top:40px;
+	padding-bottom:20px;
+}
+#fo82li350 label, #fo82li462 label, #fo82li564 label {
+	background-image: url("../images/additem.jpg");
+	background-repeat:no-repeat;
+	background-position:left top;
+	font-size: 0px;
+	height:15px;
+}
+#fo82li37 label, #fo82li137 label, #fo82li250 label {
+	background-image: url("../images/addroom.jpg");
+	background-repeat:no-repeat;
+	background-position:left top;
+	font-size: 0px;
+	height:15px;
+}
+#fo82li37 input, #fo82li137 input, #fo82li250 input, #fo82li350 input, #fo82li462 input, #fo82li564 input {
+	display:none;
+}
