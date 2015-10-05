@@ -47,17 +47,6 @@ $Recordset2 = mysql_query($query_Recordset2, $commreq_conn) or die(mysql_error()
 $row_Recordset2 = mysql_fetch_assoc($Recordset2);
 $totalRows_Recordset2 = mysql_num_rows($Recordset2);
 
-/**
- * @author Mark Rickert <mjar81@gmail.com>
- * @version 2012-06-21
- *
- * This example is designed to be run from the command line using
- * PHP-CLI, and is a minimal example of using the php-liquidplanner
- * library to create a new task in your workspace. You must configure
- * it to use your own workspace ID, email address, and Liquid Planner
- * password, and set a parent_id value of one of your existing
- * projects or project folders.
- */
 require_once 'scripts/liquidplanner.php';
 
 // Enter your LiquidPlanner credentials below
@@ -68,20 +57,29 @@ $lp = new LiquidPlanner("YOUR_WORKSPACE_ID", "YOUR_LP_EMAIL_ADDRESS", "YOUR_LP_P
 	in the section: "Filtering Items"
 	http://www.liquidplanner.com/storage/help/liquidplanner_API.pdf
 */
+
+// Parameters for getting tasks
 $params = array(
 	'limit' => 1000,
+	// Tasks that are not complete, not owned by the promo user, and assigned to the current client
 	'filter' => array('is_done is false','owner_id!=188134','client_id='.$row_Recordset2['lp_id']),
+	// Order by last updated
 	'order' => 'updated_at'
 );
+
+// Parameters for getting projects
 $params2 = array(
 	'limit' => 1000,
+	// Tasks that are not complete and assigned to the current client
 	'filter' => array('is_done is false','client_id='.$row_Recordset2['lp_id']),
 );
 
-/* Get specified tasks Liquid Planner */
+// Get specified tasks from Liquid Planner
 $response = $lp->tasks(NULL, $params);
+// Get specified projects from Liquid Planner
 $response2 = $lp->projects(NULL, $params2);
 
+// Code for sorting
 if($_GET['sort']=="project"){
 	usort($response, cmp);
 } else if($_GET['sort']=="name"){
@@ -117,7 +115,7 @@ function cmp($a, $b)
 ?>
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+<head>
     	<meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         
@@ -130,178 +128,179 @@ function cmp($a, $b)
         <meta name="description" content="">
         <meta property="og:title" content="">
        	<meta property="og:url" content="" />
-		<meta property="og:image" content="" /> 
+	<meta property="og:image" content="" /> 
         
         <!--[if lt IE 9]>
-			<script src="scripts/html5shiv.js"></script>
-            
-		<![endif]-->
+		<script src="scripts/html5shiv.js"></script>
+        <![endif]-->
         <!--[if gte IE 9]>
-  			<style type="text/css">
-    			.gradient {
+  		<style type="text/css">
+   			.gradient {
        				filter: none !important;
-                    background-color:none !important;
+                    		background-color:none !important;
     			}
-  			</style>
-		<![endif]-->
+  		</style>
+	<![endif]-->
         <script src="scripts/jquery.js"></script>
         <script src="scripts/jquery-ui.js"></script>
         
         <script>
-       	$("document").ready(function() {
-				$(".deptlist").hide();
-				$(".orderlist").hide();
-				$(".showdept").click(showdept);
-				$(".showdept").mouseleave(closedept);
-				$(".showorder").click(showorder);
-				$(".showorder").mouseleave(closeorder);
-				$(".taskdescription").hide();
-				$(".task, .task1").click(showdescription);
-				$(".task, .task1").mouseleave(closedescription);
-				$('a[href^="mailto:"]').each(function() {
-  					this.href = this.href.replace('(theat)', '@').replace(/\(thedot\)/g, '.');
-				 });
-			});
+       		$("document").ready(function() {
+			$(".deptlist").hide();
+			$(".orderlist").hide();
+			$(".showdept").click(showdept);
+			$(".showdept").mouseleave(closedept);
+			$(".showorder").click(showorder);
+			$(".showorder").mouseleave(closeorder);
+			$(".taskdescription").hide();
+			$(".task, .task1").click(showdescription);
+			$(".task, .task1").mouseleave(closedescription);
+			$('a[href^="mailto:"]').each(function() {
+  				this.href = this.href.replace('(theat)', '@').replace(/\(thedot\)/g, '.');
+			 });
+		});
 		function showdept() {
-				$(".orderlist").hide();
-				$(".deptlist").slideDown(300);
+			$(".orderlist").hide();
+			$(".deptlist").slideDown(300);
 		}
 		function closedept() {
-				$(".orderlist").hide();
-				$(".deptlist").slideUp(300);
+			$(".orderlist").hide();
+			$(".deptlist").slideUp(300);
 		}
 		function showorder() {
-				$(".deptlist").hide();
-				$(".orderlist").slideDown(300);
+			$(".deptlist").hide();
+			$(".orderlist").slideDown(300);
 		}
 		function closeorder() {
-				$(".deptlist").hide();
-				$(".orderlist").slideUp(300);
+			$(".deptlist").hide();
+			$(".orderlist").slideUp(300);
 		}
 		function showdescription(e) {
-				$(this).children(".taskdescription").slideDown(150); 
+			$(this).children(".taskdescription").slideDown(150); 
 		}
 		function closedescription(e) {
-				$(this).children(".taskdescription").hide(); 
+			$(this).children(".taskdescription").hide(); 
 		}
-		</script>
-    </head>
-    <body>
-    	<header>
+	</script>
+</head>
+<body>
+	<header>
         	<div class="centercontent">
-            	<a href="/reporting/"><img src="images/reporting_logo.png" class="logo"></a>
-                <a href="http://www.commreq.com" class="submitlink">Submit a Comm Req</a>
+	            	<a href="/reporting/"><img src="images/reporting_logo.png" class="logo"></a>
+	                <a href="http://www.commreq.com" class="submitlink">Submit a Comm Req</a>
         	</div>
         </header>
         <nav id="subnav">
         	<div class="centercontent">
-           	  <div id="subnavlinks">
-            		<div class="label">Now Showing:</div>
-<div class="dropdown showdept"><span><?php echo $row_Recordset2['departmentname']; ?></span>
-                    	<div class="deptlist">
-                        	<?php do { ?>
-                       	    <a href="report.php?id=<?php echo $row_Recordset1['id']; if (isset($_GET['sort'])) { echo "&sort=".$_GET['sort']; } ?>"><?php echo $row_Recordset1['departmentname']; ?></a>
-                        	  <?php } while ($row_Recordset1 = mysql_fetch_assoc($Recordset1)); ?>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-                    <div class="label"><?php if($_GET['sort']=="project"){
-										echo "Grouped by";
-									} else {
-										echo "Ordered by";
-									} ?></div>
-<div class="dropdown showorder"><span><?php if($_GET['sort']=="project"){
-										echo "Project";
-									} else if($_GET['sort']=="name"){
-										echo "Task Name";
-									} else {
-										echo "Due Date";
-									}  ?></span>
-                    	<div class="orderlist">
-                        	<a href="report.php?id=<?php echo $row_Recordset2['id']; ?>">Due Date</a>
-                            <a href="report.php?id=<?php echo $row_Recordset2['id']; ?>&sort=project">Project</a>
-                            <a href="report.php?id=<?php echo $row_Recordset2['id']; ?>&sort=name">Task Name</a>
-                        </div>
-                    </div>
-            		<div class="clear"></div>
-              </div>
-       	  </div>
+           		<div id="subnavlinks">
+            			<div class="label">Now Showing:</div>
+            			<div class="dropdown showdept">
+            				<span><?php echo $row_Recordset2['departmentname']; ?></span>
+                    			<div class="deptlist">
+                        			<?php do { ?>
+                       	    				<a href="report.php?id=<?php echo $row_Recordset1['id']; if (isset($_GET['sort'])) { echo "&sort=".$_GET['sort']; } ?>"><?php echo $row_Recordset1['departmentname']; ?></a>
+                        	  		<?php } while ($row_Recordset1 = mysql_fetch_assoc($Recordset1)); ?>
+                            			<div class="clear"></div>
+                        		</div>
+                    		</div>
+                    		<div class="label">
+                    			<?php if($_GET['sort']=="project"){
+						echo "Grouped by";
+					} else {
+						echo "Ordered by";
+					} ?>
+				</div>
+				<div class="dropdown showorder">
+					<span><?php if($_GET['sort']=="project"){
+						echo "Project";
+					} else if($_GET['sort']=="name"){
+						echo "Task Name";
+					} else {
+						echo "Due Date";
+					}  ?></span>
+                    			<div class="orderlist">
+                        			<a href="report.php?id=<?php echo $row_Recordset2['id']; ?>">Due Date</a>
+                            			<a href="report.php?id=<?php echo $row_Recordset2['id']; ?>&sort=project">Project</a>
+                            			<a href="report.php?id=<?php echo $row_Recordset2['id']; ?>&sort=name">Task Name</a>
+                        		</div>
+                    		</div>
+            			<div class="clear"></div>
+              		</div>
+       	  	</div>
         </nav>
         <section id="maincontent">
         	<div class="centercontent">
-            	<?php if(count($response)==0) {
-						echo "<br /><br /><h2 class=\"norecord\">We currently don't have any open tasks for this ministry. You may want to <a href=\"completed.php?id=".$_GET['id']."\">check for completed tasks.</a> If you have questions, <a href=\"mailto:projectmanager@brentwoodbaptist.com\">contact us</a>.</h2><br /><br /><br />";
-					}
-					else { ?>
-                    <?php $na_sentinel=0; ?>
-					<?php foreach($response as $item) { 
+            		<?php if(count($response)==0) {
+				echo "<br /><br /><h2 class=\"norecord\">We currently don't have any open tasks for this ministry. You may want to <a href=\"completed.php?id=".$_GET['id']."\">check for completed tasks.</a> If you have questions, <a href=\"mailto:projectmanager@brentwoodbaptist.com\">contact us</a>.</h2><br /><br /><br />";
+			} else { ?>
+                    		<?php $na_sentinel=0; ?>
+				<?php foreach($response as $item) { 
             				if($item[manual_alert]!="") {
-								if($na_sentinel==0) {?>
-            	<h2>Needs Attention</h2>
-                <table class="formattedtable">
-                	<thead>
+						if($na_sentinel==0) {?>
+					            	<h2>Needs Attention</h2>
+					                <table class="formattedtable">
+					                	<thead>
+					                    	
+					                        <th class="commreq gradient">
+					                        	Comm Req<br />
+					                        	<span>(If Applicable)</span>
+					                        </th>
+					                        <th class="attention gradient">
+					                        </th>
+					                        <th class="task1 gradient">
+					                        	Task
+					                        </th>
+					                        <th class="project1 gradient">
+					                        	Project
+					                        </th>
+					                        <th class="comment gradient">
+					                        	Alert
+					                        </th>
+					                        <th class="email gradient">
+					                        	Email
+					                        </th>
+					                    </thead>
+					                    <tbody>
+					                    <?php $na_sentinel=1; 
+						} ?>
                     	
-                        <th class="commreq gradient">
-                        	Comm Req<br />
-                        	<span>(If Applicable)</span>
-                        </th>
-                        <th class="attention gradient">
-                        </th>
-                        <th class="task1 gradient">
-                        	Task
-                        </th>
-                        <th class="project1 gradient">
-                        	Project
-                        </th>
-                        <th class="comment gradient">
-                        	Alert
-                        </th>
-                        <th class="email gradient">
-                        	Email
-                        </th>
-                    </thead>
-                    <tbody>
-                    			<?php 
-								$na_sentinel=1;
-									} ?>
-                    	
-                    	<tr>
+                    					<tr>
                         	
-                        	<td class="commreq gradient">
-                            	<?php if($item[manual_alert]!="") {?>
-                            	<a href="http://www.commreq.com/projectinfo.php?id=<?php echo $item[external_reference]-10000;?>" target="_blank"><?php echo $item[external_reference];?></a>
-                                <?php } ?>
-                            </td>
-                            <td class="attention gradient borderleft">
-                            	<img src="images/attention.png" />
-                            </td>
-                            <td class="task1 borderleft gradient">
-                            	<?php echo $item[name];
+					                        <td class="commreq gradient">
+					                            	<?php if($item[manual_alert]!="") {?>
+					                            	<a href="http://www.commreq.com/projectinfo.php?id=<?php echo $item[external_reference]-10000;?>" target="_blank"><?php echo $item[external_reference];?></a>
+					                                <?php } ?>
+								</td>
+								<td class="attention gradient borderleft">
+								    <img src="images/attention.png" />
+								</td>
+								<td class="task1 borderleft gradient">
+									<?php echo $item[name];
 									if($item[description]!="") { ?>
-                                    <img src="images/plus.png" />
-                                <div class="taskdescription topdescription">
-                                <h3>&gt;&gt;</h3>
-                                <p><?php echo nl2br($item[description]);?></p>
-                                <?php } ?>
-                                </div>
-                            </td>
-                            <td class="project1 borderleft gradient">
-                            	<?php foreach($response2 as $project){
-            							if($item[project_id]==$project[id]){
-                						echo $project[name];
-                						}
-       								 }?>
-                            </td>
-                            <td class="comment borderleft gradient">
-                            	<?php echo $item[manual_alert];?>
-                            </td>
-                            <td class="email borderleft gradient" gradient>
-                            	<a href="mailto:<?php echo $item[id];?><?php if($item[package_id]!=0) { echo "P"; } ?>-02113a806779d759(theat)in(thedot)liquidplanner(thedot)com?cc=projectmanager@brentwoodbaptist.com&subject=Question about <?php echo $item[name]; ?>"><img src="images/email.png"></a>
-                            </td>
-                        </tr>
-                        <?php } } ?>
-                    </tbody>
-                </table>
+								    		<img src="images/plus.png" />
+										<div class="taskdescription topdescription">
+										<h3>&gt;&gt;</h3>
+										<p><?php echo nl2br($item[description]);?></p>
+									<?php } ?>
+									</div>
+								</td>
+								<td class="project1 borderleft gradient">
+									<?php foreach($response2 as $project){
+										if($item[project_id]==$project[id]){
+											echo $project[name];
+										}
+								       	}?>
+								</td>
+								<td class="comment borderleft gradient">
+								    <?php echo $item[manual_alert];?>
+								</td>
+								<td class="email borderleft gradient" gradient>
+								    <a href="mailto:<?php echo $item[id];?><?php if($item[package_id]!=0) { echo "P"; } ?>-02113a806779d759(theat)in(thedot)liquidplanner(thedot)com?cc=projectmanager@brentwoodbaptist.com&subject=Question about <?php echo $item[name]; ?>"><img src="images/email.png"></a>
+								</td>
+                        				</tr>
+					                <?php } } ?>
+					            </tbody>
+					        </table>
                 <?php $ip_sentinel=0; ?>
                 <?php foreach($response as $item) { 
                 			if($item[manual_alert]=="") { 
