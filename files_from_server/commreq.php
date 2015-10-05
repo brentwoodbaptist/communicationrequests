@@ -125,12 +125,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 		$row_Recordset4 = mysql_fetch_assoc($Recordset4);
 		$totalRows_Recordset4 = mysql_num_rows($Recordset4);
 		
-		require_once 'includes/liquidplanner.php';
-		// Enter your LiquidPlanner credentials below
-		$lp = new LiquidPlanner("YOUR_WORKSPACE_ID", "YOUR_LP_EMAIL_ADDRESS", "YOUR_LP_PASSWORD");
-		
-		$lpproject=0;
-		
 		$subject = "Comm Request #".$projectnumber." Submitted Successfully";
 		$message = "<body style=\"BACKGROUND-COLOR: #EAE9E7;\"><TABLE style=\"BACKGROUND-COLOR: #000000;\" border=0 cellSpacing=0 cellPadding=0 width=600 align=center>
 <TBODY>
@@ -179,16 +173,28 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   			$message .="</p><p><strong>DESCRIPTION:</strong> ".$row_Recordset2['description']."</p>
   <IMG border=0 alt=\"\" src=\"http://brentwoodbaptist.dreamhosters.com/commreq/images/emailseparator.jpg\" width=580 height=5>";
   
-  			if ($row_Recordset2['type']!=1){			
+  			// If not a simple bulletin announcement
+  			if ($row_Recordset2['type']!=1){
+  				require_once 'includes/liquidplanner.php';
+				// LiquidPlanner credentials
+				$lp = new LiquidPlanner("YOUR_WORKSPACE_ID", "YOUR_LP_EMAIL_ADDRESS", "YOUR_LP_PASSWORD");
+				// No LP project exists
+				$lpproject=0;
+				// If no LP project exists
 				if ($lpproject==0){
+					// Project Name
 					$project['name']        = $row_Recordset3['title'];
+					// Make Comm Req package the parent container
 					$project['parent_id']   = 4945992;
+					// Commreq ID as the LP reference
 					$project['external_reference']   = $projectnumber;
+					// Project Description
 					$project['description'] = 	"Comm Req: ".$projectnumber."\n
 									Submitted by: ".$row_Recordset3['username']."\n
 									Department: ".$row_Recordset3['departmentname']."\n
 									Account Code: ".$row_Recordset3['account']."\n
 									Link: http://www.commreq.com/projectinfo.php?id=".$projectid;
+					// Add URLs to any files that were attached
 					if($totalRows_Recordset4!=0){
 						$filesList .= "\n\n Attached Files";
 						do {
@@ -198,46 +204,56 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 						} while ($row_Recordset4 = mysql_fetch_assoc($Recordset4));
 						$project['description'] .= $filesList;
 					}
-		
+					
+					// Create the project
 					$responseProject = $lp->projects_create($project);
+					//Return the project ID to use for assinging tasks
 					$lpproject=$responseProject['id'];
 				}
-			
-			$task['name']        = $row_Recordset2['typename']." | ".$row_Recordset3['title'];
-			$task['parent_id']   = $lpproject;
-			$task['external_reference']   = $projectnumber;
-			if ($row_Recordset2['type']<=4){ 
-				$task['description'] ="Start Date: ".$row_Recordset2['date1']."\n";
-  				$task['description'] .="End Date: ".$row_Recordset2['date2']."\n";
-  			} else if ($row_Recordset2['type']==5 || $row_Recordset2['type']==8){
-				$task['description'] ="Due Date: ".$row_Recordset2['date1']."\n";
-  				$task['description'] .="Quantity: ".$row_Recordset2['quantity']."\n";
-  			} else if ($row_Recordset2['type']==6 || $row_Recordset2['type']==7 || $row_Recordset2['type']==9 || $row_Recordset2['type']==10){
-  				$task['description'] ="Due Date: ".$row_Recordset2['date1']."\n";
-  			}
-			$descriptionStripped = htmlspecialchars_decode($row_Recordset2['description']);
-			$descriptionStripped = strip_tags($descriptionStripped);
-			$descriptionStripped = str_replace("&nbsp;", " ", $descriptionStripped);
-			$descriptionStripped = str_replace("&ndash;", "-", $descriptionStripped);
-			$descriptionStripped = str_replace("&mdash;", "-", $descriptionStripped);
-			$descriptionStripped = str_replace("&ldquo;", "\"", $descriptionStripped);
-			$descriptionStripped = str_replace("&rdquo;", "\"", $descriptionStripped);
-			$descriptionStripped = str_replace("&rsquo;", "'", $descriptionStripped);
-			$descriptionStripped = str_replace("&lsquo;", "'", $descriptionStripped);
-			$task['description'] .= "\n".$descriptionStripped."\n \n";
-			$task['description'] .= "Comm Req: ".$projectnumber."\n
-									Submitted: ".date('Y-m-d')."\n
-									Submitted by: ".$row_Recordset3['username']."\n
-									Department: ".$row_Recordset3['departmentname']."\n
-									Link: http://www.commreq.com/projectinfo.php?id=".$projectid;
-			if($totalRows_Recordset4!=0){
-						$task['description'] .= $filesList;
-					}
-			if($row_Recordset2['date1']!="0000-00-00") {	
-				$task['promise_by'] = $row_Recordset2['date1']."T00:00:01+00:00";
-			}
-			
-			$response = $lp->tasks_create($task);
+				
+				// Task Name
+				$task['name']        = $row_Recordset2['typename']." | ".$row_Recordset3['title'];
+				// Use newly created project ID as parent project
+				$task['parent_id']   = $lpproject;
+				// Commreq ID as the LP reference
+				$task['external_reference']   = $projectnumber;
+				// Type specific description generation & strip tags
+				if ($row_Recordset2['type']<=4){ 
+					$task['description'] ="Start Date: ".$row_Recordset2['date1']."\n";
+	  				$task['description'] .="End Date: ".$row_Recordset2['date2']."\n";
+	  			} else if ($row_Recordset2['type']==5 || $row_Recordset2['type']==8){
+					$task['description'] ="Due Date: ".$row_Recordset2['date1']."\n";
+	  				$task['description'] .="Quantity: ".$row_Recordset2['quantity']."\n";
+	  			} else if ($row_Recordset2['type']==6 || $row_Recordset2['type']==7 || $row_Recordset2['type']==9 || $row_Recordset2['type']==10){
+	  				$task['description'] ="Due Date: ".$row_Recordset2['date1']."\n";
+	  			}
+				$descriptionStripped = htmlspecialchars_decode($row_Recordset2['description']);
+				$descriptionStripped = strip_tags($descriptionStripped);
+				$descriptionStripped = str_replace("&nbsp;", " ", $descriptionStripped);
+				$descriptionStripped = str_replace("&ndash;", "-", $descriptionStripped);
+				$descriptionStripped = str_replace("&mdash;", "-", $descriptionStripped);
+				$descriptionStripped = str_replace("&ldquo;", "\"", $descriptionStripped);
+				$descriptionStripped = str_replace("&rdquo;", "\"", $descriptionStripped);
+				$descriptionStripped = str_replace("&rsquo;", "'", $descriptionStripped);
+				$descriptionStripped = str_replace("&lsquo;", "'", $descriptionStripped);
+				$task['description'] .= "\n".$descriptionStripped."\n \n";
+				$task['description'] .= "Comm Req: ".$projectnumber."\n
+							Submitted: ".date('Y-m-d')."\n
+							Submitted by: ".$row_Recordset3['username']."\n
+							Department: ".$row_Recordset3['departmentname']."\n
+							Link: http://www.commreq.com/projectinfo.php?id=".$projectid;
+				// Add URLs to files
+				if($totalRows_Recordset4!=0){
+					$task['description'] .= $filesList;
+				}
+				
+				// Add LP due date if one is available
+				if($row_Recordset2['date1']!="0000-00-00") {	
+					$task['promise_by'] = $row_Recordset2['date1']."T00:00:01+00:00";
+				}
+				
+				// Create task
+				$response = $lp->tasks_create($task);
 			
 			}
 			
