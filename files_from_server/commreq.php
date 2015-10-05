@@ -125,6 +125,12 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 		$row_Recordset4 = mysql_fetch_assoc($Recordset4);
 		$totalRows_Recordset4 = mysql_num_rows($Recordset4);
 		
+		require_once 'includes/liquidplanner.php';
+		// LiquidPlanner credentials
+		$lp = new LiquidPlanner("YOUR_WORKSPACE_ID", "YOUR_LP_EMAIL_ADDRESS", "YOUR_LP_PASSWORD");
+		// No LP project exists
+		$lpproject=0;
+		
 		$subject = "Comm Request #".$projectnumber." Submitted Successfully";
 		$message = "<body style=\"BACKGROUND-COLOR: #EAE9E7;\"><TABLE style=\"BACKGROUND-COLOR: #000000;\" border=0 cellSpacing=0 cellPadding=0 width=600 align=center>
 <TBODY>
@@ -175,11 +181,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   
   			// If not a simple bulletin announcement
   			if ($row_Recordset2['type']!=1){
-  				require_once 'includes/liquidplanner.php';
-				// LiquidPlanner credentials
-				$lp = new LiquidPlanner("YOUR_WORKSPACE_ID", "YOUR_LP_EMAIL_ADDRESS", "YOUR_LP_PASSWORD");
-				// No LP project exists
-				$lpproject=0;
 				// If no LP project exists
 				if ($lpproject==0){
 					// Project Name
